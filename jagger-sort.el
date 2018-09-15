@@ -80,7 +80,7 @@
 (defun jagger-sort-sexps-at-point-in-temp-buffer ()
   "Sort sexps in current list or region."
   (interactive)
-  (let* ((tmpbuf "Swap sexps*")
+  (let* ((tmpbuf "*Swap sexps*")
          (bounds-sexps (jagger-util--bounds-and-sexps-at-point))
          (lines-sexps (mapcar
                        (lambda (bound-sexp)
