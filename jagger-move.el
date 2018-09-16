@@ -35,7 +35,9 @@
   (remove-hook 'deactivate-mark-hook 'jagger-move--restore-region-hook)
   (let ((reg jagger-move--last-region-mark))
     (when reg
-      (if (and (fboundp 'evil-visual-state-p) (evil-visual-state-p))
+      (if (and (fboundp 'evil-visual-state-p)
+               (fboundp 'evil-visual-select)
+               (evil-visual-state-p))
           (evil-visual-select (car reg) (cdr reg))
         (goto-char (cdr reg))
         (set-mark (car reg))))))
@@ -44,7 +46,9 @@
   "Restore region at new place from BEG to END.
 Also add hook to `deactivate-mark-hook' and backup region."
   (add-hook 'deactivate-mark-hook 'jagger-move--restore-region-hook)
-  (if (and (fboundp 'evil-visual-state-p) (evil-visual-state-p))
+  (if (and (fboundp 'evil-visual-state-p)
+           (fboundp 'evil-visual-select)
+           (evil-visual-state-p))
       (evil-visual-select beg (1- end))
     (goto-char end)
     (set-mark beg))
@@ -146,7 +150,7 @@ THING should be ‘sexp’ or ‘word’."
                           (- (cdr cur-bound) cur-point))))))
     (error
      (pcase err
-       (`(scan-error "Containing expression ends prematurely" . ,rest)
+       (`(scan-error "Containing expression ends prematurely" . ,_)
         (message "Already at the boundary")))))
   (jagger-swap-regions-clean-marks))
 
@@ -175,7 +179,7 @@ THING should be ‘sexp’ or ‘word’."
                           (- cur-point (car cur-bound)))))))
     (error
      (pcase err
-       (`(scan-error "Containing expression ends prematurely" . ,rest)
+       (`(scan-error "Containing expression ends prematurely" . ,_)
         (message "Already at the boundary")))))
   (jagger-swap-regions-clean-marks))
 

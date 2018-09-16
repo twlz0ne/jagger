@@ -24,6 +24,8 @@
 
 ;;; Code:
 
+(require 'jagger-util)
+
 (defvar jagger-swap-regions-mark-face '(:inherit isearch) "Face of marked region.")
 
 (defvar jagger-swap-regions--marks '() "Region mark list.")

@@ -68,13 +68,13 @@
     (with-current-buffer (get-buffer jagger-sort-sexps-at-point--temp-buffer)
       (let ((sorted-sexps
              (mapcar (lambda (line) (alist-get line jagger-sort--lines-and-sexps nil nil 'equal)) sorted-lines)))
-        (mapcar (lambda (bound-sexp)
-                  (let ((bound (car bound-sexp))
-                        (sexp (pop sorted-sexps)))
-                    (delete-region (car bound) (cdr bound))
-                    (goto-char (car bound))
-                    (insert sexp)))
-                (reverse jagger-sort--bounds-and-sexps))))
+        (mapc (lambda (bound-sexp)
+                (let ((bound (car bound-sexp))
+                      (sexp (pop sorted-sexps)))
+                  (delete-region (car bound) (cdr bound))
+                  (goto-char (car bound))
+                  (insert sexp)))
+              (reverse jagger-sort--bounds-and-sexps))))
     (kill-buffer-and-window)))
 
 (defun jagger-sort-sexps-at-point-in-temp-buffer ()
@@ -93,16 +93,9 @@
     (setq jagger-sort-sexps-at-point--temp-buffer (current-buffer))
     (with-current-buffer (get-buffer-create tmpbuf)
       (erase-buffer)
-      (setq jagger-sort-mode-hook '())
       (add-hook
        'jagger-sort-mode-hook
        (lambda ()
-         (let ((map jagger-sort-mode-map))
-           ;; (define-key map (kbd "M-j") 'jagger-move-line-down)
-           ;; (define-key map (kbd "M-k") 'jagger-move-line-up)
-           ;; (define-key map (kbd "C-c C-c") 'jagger-sort-sexps-at-point--edit-commit)
-           ;; (define-key map (kbd "C-c C-k") 'kill-buffer-and-window)
-           )
          (setq header-line-format
                (substitute-command-keys
                 "Edit, then exit with `\\[jagger-sort-sexps-at-point--edit-commit]' or abort with `\\[kill-buffer-and-window]'") )))

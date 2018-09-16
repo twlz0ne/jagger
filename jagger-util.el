@@ -88,7 +88,7 @@
               (backward-sexp)
             (error
              (pcase err
-               (`(scan-error "Containing expression ends prematurely" . ,rest)
+               (`(scan-error "Containing expression ends prematurely" . ,_)
                 (throw 'break nil)))))
           (let ((bound (bounds-of-thing-at-point 'sexp))
                 (sexp (thing-at-point 'sexp t)))
