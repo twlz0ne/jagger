@@ -67,13 +67,13 @@
     (pop sorted-lines) ;; drop empty element
     (with-current-buffer (get-buffer jagger-sort-sexps-at-point--temp-buffer)
       (let ((sorted-sexps
-             (mapcar (lambda (line) (alist-get line jagger-sort--lines-and-sexps nil nil 'equal)) sorted-lines)))
+             (mapcar (lambda (line) (assoc line jagger-sort--lines-and-sexps)) sorted-lines)))
         (mapc (lambda (bound-sexp)
                 (let ((bound (car bound-sexp))
                       (sexp (pop sorted-sexps)))
                   (delete-region (car bound) (cdr bound))
                   (goto-char (car bound))
-                  (insert sexp)))
+                  (insert (car sexp))))
               (reverse jagger-sort--bounds-and-sexps))))
     (kill-buffer-and-window)))
 

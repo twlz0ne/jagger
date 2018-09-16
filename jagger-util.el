@@ -24,8 +24,44 @@
 
 ;;; Code:
 
+(if (featurep 'subr-x)
+    (require 'subr-x))
+
 (defun backward-line ()
   (forward-line -1))
+
+(defun bounds-of-list-at-point ()
+  "Return the bounds of the list at point."
+  (if (version<= "26.1" emacs-version)
+      (funcall (get 'list 'bounds-of-thing-at-point))
+    (save-excursion
+      (let* ((st (parse-partial-sexp (point-min) (point)))
+             (beg (or (and (eq 4 (car (syntax-after (point))))
+                           (not (nth 8 st))
+                           (point))
+                      (nth 1 st))))
+        (when beg
+          (goto-char beg)
+          (forward-sexp)
+          (cons beg (point)))))))
+
+(unless (fboundp 'string-trim-left)
+  (defsubst string-trim-left (string &optional regexp)
+    "Trim STRING of leading string matching REGEXP.
+
+REGEXP defaults to \"[ \\t\\n\\r]+\"."
+    (if (string-match (concat "\\`\\(?:" (or regexp "[ \t\n\r]+") "\\)") string)
+        (substring string (match-end 0))
+      string)))
+
+(unless (fboundp 'string-trim-right)
+  (defsubst string-trim-right (string &optional regexp)
+    "Trim STRING of trailing string matching REGEXP.
+
+REGEXP defaults to  \"[ \\t\\n\\r]+\"."
+    (let ((i (string-match-p (concat "\\(?:" (or regexp "[ \t\n\r]+") "\\)\\'")
+                             string)))
+      (if i (substring string 0 i) string))))
 
 (defun jagger-util--bounds-of-thing-at-point (thing)
   "Determine the start and end buffer locations for the THING at point."
@@ -77,7 +113,7 @@
 
 (defun jagger-util--bounds-and-sexps-at-point ()
   "Bounds of sexps at point."
-  (let ((list-bound (bounds-of-thing-at-point 'list))
+  (let ((list-bound (bounds-of-list-at-point))
         (bounds-sexps '()))
     (save-excursion
       (goto-char (cdr list-bound))

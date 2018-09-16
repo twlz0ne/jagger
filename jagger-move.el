@@ -24,7 +24,6 @@
 
 ;;; Code:
 
-(require 'subr-x)
 (require 'jagger-util)
 (require 'jagger-swap)
 
@@ -52,7 +51,7 @@ Also add hook to `deactivate-mark-hook' and backup region."
       (evil-visual-select beg (1- end))
     (goto-char end)
     (set-mark beg))
-  (setq jagger-move--last-region-mark (car (region-bounds))))
+  (setq jagger-move--last-region-mark (cons beg end)))
 
 (defun jagger-move-line (n)
   "Move the current line or region up or down by N lines."

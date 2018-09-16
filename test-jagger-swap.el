@@ -43,7 +43,7 @@ If ERASE-P not nil, erase the buffer."
     (set-mark (match-end 0))
     (when noninteractive
       (transient-mark-mode)) ;; MUST
-    (funcall-interactively mark-fn)
+    (funcall mark-fn)
     ))
 
 (ert-deftest test-jagger-swap-regions ()
