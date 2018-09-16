@@ -1,8 +1,10 @@
-## jagger.el
+[![Build Status](https://travis-ci.com/twlz0ne/jagger.svg?branch=master)](https://travis-ci.com/twlz0ne/jagger)
+
+## Jagger
 
 Move/swap things (including regions, sexps, lines, words) more conveniently in Emacs.
 
-## Install
+## Installation
 
 Copy file `jagger*.el` to directory `~/.emacs.d/site-lisp/jagger/`, for example, and add this to your .emacs
 
