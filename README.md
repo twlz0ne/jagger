@@ -1,6 +1,6 @@
 ## jagger.el
 
-Move/swap things (including regions, sexps, lines, words) more convenient in Emacs.
+Move/swap things (including regions, sexps, lines, words) more conveniently in Emacs.
 
 ## Install
 
@@ -20,7 +20,7 @@ Copy file `jagger*.el` to directory `~/.emacs.d/site-lisp/jagger/`, for example,
 - Select region2
 - `jagger-swap-regions` apply swap, clean overlay
 
-A more natural way is attach swap function to yank. There is a example for evil:
+A more natural way is to mark regions automatically when yanking. There is an example for evil:
 
 ```elisp
 (defun evil-yank@set-mark (begin end &rest argv)
@@ -36,7 +36,7 @@ Then you can use it like this:
 - Select region2
 - `M-p` to apply swap
 
-### Swap things (sexps/words/lines) surround point
+### Swap things (sexps/words/lines) around point
 
 ```
 (foo| bar) -> (|bar foo)  ;; jagger-swap-sexps
@@ -48,13 +48,13 @@ Then you can use it like this:
 (foo [(qux "quux")] bar) -> (bar (qux "quux")| foo) ;; jagger-swap-sexps
 ```
 
-### Move things backward/forward at point
+### Move things at point backward/forward
 
 ```
 (|foo bar) -> (bar |foo) ;; jagger-move-sexp-forward
 ```
 
-### Move region backward/forward by sexp
+### Move sexp backward/forward
 
 ```
 ([foo] (qux "quux") bar) -> ((qux "quux") [foo] bar) ;; jagger-move-sexp-forward
