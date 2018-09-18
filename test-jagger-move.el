@@ -98,19 +98,25 @@
 (cl-defun test-jagger-move-line--common (&key initial expected from step)
   (with-temp-buffer
     (insert initial)
-    (cond
-     ((numberp from)
-      (goto-line from))
-     ((stringp from)
-      (when noninteractive
-        (transient-mark-mode))
-      (goto-char (point-min))
-      (re-search-forward from)
-      (set-mark (- (point) (length from))))
-     (t (error "Unknow value fo `from': %S" from)))
+    (goto-line from)
     (jagger-move-line step)
     (should (equal (buffer-substring-no-properties (point-min) (point-max))
                    expected))))
+
+(cl-defun test-jagger-move-multiple-lines--common
+    (&key initial expected region-pattern expected-region step)
+  (with-temp-buffer
+    (insert initial)
+    (when noninteractive
+      (transient-mark-mode))
+    (goto-char (point-min))
+    (re-search-forward region-pattern)
+    (set-mark (- (point) (length region-pattern)))
+    (jagger-move-line step)
+    (should (and (equal (buffer-substring-no-properties (point-min) (point-max))
+                        expected)
+                 (equal (buffer-substring-no-properties (region-beginning) (region-end))
+                        expected-region)))))
 
 (ert-deftest test-jagger-move-line ()
   ;; move line down
@@ -194,37 +200,43 @@
    :step     -3)
 
   ;; move selected lines down
-  (test-jagger-move-line--common
+  (test-jagger-move-multiple-lines--common
    :initial  "foo\nqux\nquux\nbar"
    :expected "quux\nfoo\nqux\nbar"
-   :from     "foo\nqux\n"
+   :region-pattern "foo\nqux\n"
+   :expected-region "foo\nqux\n"
    :step     1)
-  (test-jagger-move-line--common
+  (test-jagger-move-multiple-lines--common
    :initial  "foo\nqux\nquux\nbar"
    :expected "quux\nbar\nfoo\nqux"
-   :from     "foo\nqux\n"
+   :region-pattern "foo\nqux\n"
+   :expected-region "foo\nqux"
    :step     2)
-  (test-jagger-move-line--common
+  (test-jagger-move-multiple-lines--common
    :initial  "foo\nqux\nquux\nbar"
    :expected "quux\nbar\nfoo\nqux"
-   :from     "foo\nqux\n"
+   :region-pattern "foo\nqux\n"
+   :expected-region "foo\nqux"
    :step     3)
 
   ;; move selected lines up
-  (test-jagger-move-line--common
+  (test-jagger-move-multiple-lines--common
    :initial  "foo\nqux\nquux\nbar"
    :expected "foo\nquux\nbar\nqux"
-   :from     "quux\nbar"
+   :region-pattern "quux\nbar"
+   :expected-region "quux\nbar\n"
    :step     -1)
-  (test-jagger-move-line--common
+  (test-jagger-move-multiple-lines--common
    :initial  "foo\nqux\nquux\nbar"
    :expected "quux\nbar\nfoo\nqux"
-   :from     "quux\nbar"
+   :region-pattern "quux\nbar"
+   :expected-region "quux\nbar\n"
    :step     -2)
-  (test-jagger-move-line--common
+  (test-jagger-move-multiple-lines--common
    :initial  "foo\nqux\nquux\nbar"
    :expected "quux\nbar\nfoo\nqux"
-   :from     "quux\nbar"
+   :region-pattern "quux\nbar"
+   :expected-region "quux\nbar\n"
    :step     -3)
   )
 

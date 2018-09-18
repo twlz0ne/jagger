@@ -93,8 +93,8 @@ Also add hook to `deactivate-mark-hook' and backup region."
           (forward-line n))
 
         (when restore-region-p
-          (setq ov (jagger-swap-regions--make-overlay
-                    (point-at-bol) (point-at-bol) t)))
+          (let ((pos (if (and to-end (not trailing-newline)) (point-at-eol) (point-at-bol))))
+            (setq ov (jagger-swap-regions--make-overlay pos pos t))))
 
         ;; "\n<line>" => "<line>\n"
         (when borrow-trailing
@@ -108,7 +108,8 @@ Also add hook to `deactivate-mark-hook' and backup region."
         ;; Restore point or region
         (if ov
             (progn
-              (jagger-move--restore-region (overlay-start ov)
+              (jagger-move--restore-region (+ (overlay-start ov)
+                                              (if (and to-end (not trailing-newline)) 1 0))
                                            (overlay-end ov))
               (delete-overlay ov))
           (forward-line -1)
