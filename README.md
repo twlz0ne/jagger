@@ -15,7 +15,7 @@ Copy file `jagger*.el` to directory `~/.emacs.d/site-lisp/jagger/`, for example,
 
 ## Usage
 
-### Swap two regions
+### Swap two regions (allow across buffers)
 
 - Select region1
 - `jagger-swap-regions-mark-region` set mark and highlight it with overlay

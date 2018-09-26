@@ -46,3 +46,5 @@
 (require 'jagger-sort)
 
 (provide 'jagger)
+
+;;; jagger.el ends here
